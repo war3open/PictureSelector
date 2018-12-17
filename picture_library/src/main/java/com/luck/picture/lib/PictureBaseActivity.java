@@ -353,7 +353,7 @@ public class PictureBaseActivity extends FragmentActivity {
      */
     protected void rotateImage(int degree, File file) {
         if (degree > 0) {
-            // 针对相片有旋转问题的处理方式 2 to1
+            // 针对相片有旋转问题的处理方式 2 to1 34234234234234
             try {
                 BitmapFactory.Options opts = new BitmapFactory.Options();//获取缩略图显示到屏幕上
                 opts.inSampleSize = 1;
