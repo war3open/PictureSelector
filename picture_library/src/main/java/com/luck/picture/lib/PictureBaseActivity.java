@@ -356,7 +356,7 @@ public class PictureBaseActivity extends FragmentActivity {
             // 针对相片有旋转问题的处理方式
             try {
                 BitmapFactory.Options opts = new BitmapFactory.Options();//获取缩略图显示到屏幕上
-                opts.inSampleSize = 2;
+                opts.inSampleSize = 1;
                 Bitmap bitmap = BitmapFactory.decodeFile(file.getAbsolutePath(), opts);
                 Bitmap bmp = PictureFileUtils.rotaingImageView(degree, bitmap);
                 PictureFileUtils.saveBitmapFile(bmp, file);
