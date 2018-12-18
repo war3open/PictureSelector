@@ -368,6 +368,7 @@ public class PictureSelectorActivity extends PictureBaseActivity implements View
      * start to camera、preview、crop
      */
     public void startOpenCamera() {
+
         Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (cameraIntent.resolveActivity(getPackageManager()) != null) {
             int type = config.mimeType == PictureConfig.TYPE_ALL ? PictureConfig.TYPE_IMAGE : config.mimeType;
@@ -940,7 +941,8 @@ public class PictureSelectorActivity extends PictureBaseActivity implements View
                     String toType = PictureMimeType.fileToType(file);
                     if (config.mimeType != PictureMimeType.ofAudio()) {
                         int degree = PictureFileUtils.readPictureDegree(file.getAbsolutePath());
-                        rotateImage(degree, file);
+//                        rotateImage(degree, file);
+                        Log.d("999999999999999", "readPictureDegree: "+degree);
                     }
                     // 生成新拍照片或视频对象
                     media = new LocalMedia();

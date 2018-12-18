@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -33,6 +34,7 @@ import com.yalantis.ucrop.UCrop;
 import com.yalantis.ucrop.UCropMulti;
 
 import java.io.File;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -353,13 +355,35 @@ public class PictureBaseActivity extends FragmentActivity {
      */
     protected void rotateImage(int degree, File file) {
         if (degree > 0) {
-            // 针对相片有旋转问题的处理方式 2 to1 34234234234234
+
+            // 针对相片有旋转问题的处理方式
             try {
                 BitmapFactory.Options opts = new BitmapFactory.Options();//获取缩略图显示到屏幕上
-                opts.inSampleSize = 1;
+                opts.inSampleSize = 2;
+                ExifInterface oldExif=new ExifInterface(file.getAbsolutePath());
                 Bitmap bitmap = BitmapFactory.decodeFile(file.getAbsolutePath(), opts);
                 Bitmap bmp = PictureFileUtils.rotaingImageView(degree, bitmap);
                 PictureFileUtils.saveBitmapFile(bmp, file);
+
+                ExifInterface newExif=new ExifInterface(file.getAbsolutePath());
+                Class<ExifInterface> cls = ExifInterface.class;
+                Field[] fields = cls.getFields();
+                for (int i = 0; i < fields.length; i++) {
+                    String fieldName = fields[i].getName();
+                    if (!TextUtils.isEmpty(fieldName) && fieldName.startsWith("TAG")) {
+                        String fieldValue = fields[i].get(cls).toString();
+                        String attribute = oldExif.getAttribute(fieldValue);
+                        if (attribute != null) {
+                            if(fieldName.equals("TAG_ORIENTATION")){
+                                newExif.setAttribute(fieldValue,"1");
+                            }else{
+                                newExif.setAttribute(fieldValue, attribute);
+                            }
+
+                        }
+                    }
+                }
+                newExif.saveAttributes();
             } catch (Exception e) {
                 e.printStackTrace();
             }
